@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Kotori Manga</title>
+    <style>
+        :root {
+            --primary-color: #673ab7;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            font-size: 28px;
+        }
+        h2 {
+            color: #444;
+            margin-top: 30px;
+            font-size: 20px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
+        p, li {
+            font-size: 15px;
+            color: #555;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .lang-switch {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .lang-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .highlight-box {
+            background-color: #f0ebf7;
+            border-index: 1px solid #d1c4e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lang-switch">
+        <a href="#en">English Version</a> | <a href="#zh">中文版本</a>
+    </div>
+
+    <!-- ENGLISH VERSION -->
+    <section id="en">
+        <h1>Privacy Policy</h1>
+        <p><strong>Last Updated: June 2026</strong></p>
+        <p>Kotori Manga ("we", "our", or "the App") is a local-first comic and manga reader app. We respect and protect the privacy of our users. This Privacy Policy explains how the App interacts with your data.</p>
+        
+        <div class="highlight-box">
+            <strong>Core Principle: Zero Server Collection</strong><br>
+            Kotori Manga does NOT own or operate any cloud servers to collect, store, or share your personal data, browsing history, comic files, or cloud storage credentials. All data belongs strictly to you and stays on your device or your chosen cloud providers.
+        </div>
+
+        <h2>1. Features and Data Interaction</h2>
+        <ul>
+            <li><strong>Local and Network Storage (WebDAV / SMB / OPDS / FTP):</strong> The App allows you to connect to your own local network servers to stream or download comics. All connection credentials (passports, URLs) are encrypted and stored locally on your device.</li>
+            <li><strong>Third-Party Cloud Storages (Google Drive / MEGA / Dropbox):</strong> The App integrates official SDKs/APIs to let you read comics from your cloud accounts. Authentication is performed directly via official OAuth securely. We do not transfer your access tokens or cloud files to any third party.</li>
+            <li><strong>Built-in Web Browser & Batch Downloader:</strong> The App includes a built-in browser to help you preview comic websites and download web images as local packages. No browsing history or web cookies are tracked, uploaded, or analyzed.</li>
+            <li><strong>File Import & Wi-Fi Transfer:</strong> Comics imported locally via Files or Wi-Fi transfer are stored completely offline within the App's secure sandbox directory.</li>
+            <li><strong>iCloud Sync & Backup:</strong> The App utilizes Apple iCloud to sync your settings and bookshelves across your own iOS/macOS devices. This data goes directly through Apple's secure infrastructure; we have no access to it.</li>
+        </ul>
+
+        <h2>2. Data Security</h2>
+        <p>Since all data is stored locally inside the iOS secure sandbox or within your personal cloud storage, the security of your data relies on your device security and your cloud provider's protection. We strongly recommend protecting your device with a passcode or Face ID.</p>
+
+        <h2>3. Changes to This Privacy Policy</h2>
+        <p>We may update our Privacy Policy from time to time. Any changes will be posted on this official page.</p>
+    </section>
+
+    <hr style="border: 0; border-top: 1px dashed #ddd; margin: 40px 0;">
+
+    <!-- CHINESE VERSION -->
+    <section id="zh">
+        <h1>隐私政策</h1>
+        <p><strong>最近更新：2026年6月</strong></p>
+        <p>Kotori Manga（下称“我们”或“本应用”）是一款本地优先的漫画与漫画阅读器应用。我们高度重视并保护用户的隐私。本隐私政策旨在向您说明本应用如何处理您的数据。</p>
+        
+        <div class="highlight-box">
+            <strong>核心原则：零服务器收集</strong><br>
+            Kotori Manga 不拥有也不运营任何云端服务器，我们不会收集、存储或共享您的任何个人数据、浏览历史、漫画文件或云盘登录凭证。所有数据完全属于您个人，并仅保存在您的本地设备或您选择的云服务商处。
+        </div>
+
+        <h2>1. 功能与数据交互说明</h2>
+        <ul>
+            <li><strong>本地网络存储 (WebDAV / SMB / OPDS / FTP)：</strong> 应用允许您连接到您个人的网络服务器以读取或下载漫画。所有连接凭证（密码、URL等）均经过加密后安全地保存在您的本机设备上。</li>
+            <li><strong>第三方云存储 (Google Drive / MEGA / Dropbox)：</strong> 应用集成了官方的 SDK/API 允许您读取云盘中的漫画。所有登录验证均通过官方 OAuth 安全渠道直连完成。我们绝不会将您的访问令牌 (Tokens) 或网盘文件传输给任何第三方。</li>
+            <li><strong>内置网页浏览器与批量下载：</strong> 本应用内置了轻量级浏览器，用于协助您预览漫画网站并打包下载其中的图片至本地。应用不会追踪、上传或分析您的任何网页浏览历史及 Cookies。</li>
+            <li><strong>本机导入与 Wi-Fi 传书：</strong> 通过本机文件应用或 Wi-Fi 传输导入的漫画文件，完全离线存储在本应用的安全沙盒目录中。</li>
+            <li><strong>iCloud 同步与备份：</strong> 本应用利用 Apple iCloud 技术在您个人的 iOS/macOS 设备之间同步应用设置和书架状态。该数据直接通过苹果公司的安全加密通道传输，我们无法获取。</li>
+        </ul>
+
+        <h2>2. 数据安全</h2>
+        <p>鉴于所有数据均存储在您的 iOS 安全沙盒内或您的个人云盘中，数据的安全性完全取决于您设备的自身防护以及云服务商的安全保障。我们强烈建议您为设备启用锁屏密码或 Face ID。</p>
+
+        <h2>3. 隐私政策的变更</h2>
+        <p>我们可能会不时更新本隐私政策。任何修订都将直接在此官方网页上公布。</p>
+    </section>
+
+    <footer>
+        <p>© 2026 Kotori Manga. All rights reserved.</p>
+        <p>Official Website: <a href="https://kotorimanga.com" style="color: #999;">kotorimanga.com</a></p>
+    </footer>
+</div>
+
+</body>
+</html>
