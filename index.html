@@ -1,1 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kotori Manga is a modern, elegant manga reader for iOS.">
+<title>Kotori Manga - The Ultimate Manga Reader</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--color-bg:#F6F7F9;--color-card:#FFFFFF;--color-input:#EFF0F4;--color-text:#19191D;--color-text-secondary:#8E8E93;--color-sep:#E5E5EA;--color-cover:#E8EAF0;--color-bar:#FFFFFF}
+.dark{--color-bg:#000000;--color-card:#1E1E1E;--color-input:#1C1C1E;--color-text:#FFFFFF;--color-text-secondary:#8E8E93;--color-sep:#38383A;--color-cover:#2C2C2E;--color-bar:#1A1A1A}
+html{scroll-behavior:smooth}
+body{background:var(--color-bg);color:var(--color-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;transition:background .3s,color .3s;margin:0}
+.theme-toggle{position:relative;width:48px;height:26px;background:var(--color-input);border-radius:13px;cursor:pointer;transition:background .3s;border:1px solid var(--color-sep)}
+.theme-toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#005BFF;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.dark .theme-toggle::after{transform:translateX(22px)}
+.lang-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--color-sep);background:transparent;color:var(--color-text-secondary)}
+.lang-btn.active{background:#005BFF;color:#fff;border-color:#005BFF}
+.nav-blur{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--color-bar)}
+.hero-gradient{background:linear-gradient(135deg,#005BFF 0%,#7B2FF7 50%,#F50057 100%)}
+.hero-gradient-light{background:linear-gradient(135deg,#EEF2FF 0%,#FDF2F8 50%,#FFF1F2 100%)}
+.mockup-frame{background:var(--color-card);border-radius:24px;box-shadow:0 25px 60px rgba(0,0,0,.12),0 8px 20px rgba(0,0,0,.06);overflow:hidden;border:1px solid var(--color-sep)}
+.dark .mockup-frame{box-shadow:0 25px 60px rgba(0,0,0,.4),0 8px 20px rgba(0,0,0,.2)}
+.mockup-status-bar{height:28px;background:var(--color-bar);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:10px;font-weight:600;color:var(--color-text)}
+.mockup-nav{height:44px;background:var(--color-bar);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--color-text);border-bottom:1px solid var(--color-sep);position:relative}
+.mockup-nav-back{position:absolute;left:12px;display:flex;align-items:center;gap:2px;font-size:13px;color:#005BFF}
+.mockup-nav-action{position:absolute;right:12px;font-size:13px;color:#005BFF}
+.shelf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}
+.manga-card{display:flex;flex-direction:column;gap:6px}
+.manga-cover{aspect-ratio:.75;border-radius:12px;background:var(--color-cover);position:relative;overflow:hidden}
+.manga-cover-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 30%,transparent 70%,rgba(0,0,0,.3) 100%)}
+.manga-cover-badge{position:absolute;top:6px;right:6px;font-size:9px;font-weight:600;color:#fff;padding:2px 5px;background:rgba(0,0,0,.55);border-radius:4px}
+.manga-title{font-size:11px;font-weight:500;color:var(--color-text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center}
+.browser-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--color-bar);border-bottom:1px solid var(--color-sep)}
+.browser-address{flex:1;height:32px;background:var(--color-input);border-radius:8px;display:flex;align-items:center;padding:0 10px;font-size:12px;color:var(--color-text-secondary)}
+.browser-progress{height:3px;background:#005BFF;width:60%;border-radius:0 2px 2px 0}
+.browser-fab{width:40px;height:40px;border-radius:50%;background:#005BFF;position:absolute;bottom:12px;right:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,91,255,.4)}
+.reader-top-bar{height:44px;background:rgba(0,0,0,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;padding:0 12px;gap:10px;border-radius:24px;margin:12px}
+.reader-bottom-bar{height:48px;background:rgba(0,0,0,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;padding:0 12px;gap:8px;border-radius:24px;margin:12px}
+.reader-page{background:#111;display:flex;align-items:center;justify-content:center;position:relative}
+.reader-slider{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.2);outline:none;flex:1}
+.reader-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer}
+.file-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--color-sep)}
+.file-row-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.file-row-icon.blue{background:#EFF6FF;color:#005BFF}
+.file-row-icon.green{background:#F0FDF4;color:#22C55E}
+.file-row-icon.orange{background:#FFF7ED;color:#F97316}
+.file-row-icon.purple{background:#FAF5FF;color:#A855F7}
+.dark .file-row-icon.blue{background:rgba(0,91,255,.15)}
+.dark .file-row-icon.green{background:rgba(34,197,94,.15)}
+.dark .file-row-icon.orange{background:rgba(249,115,22,.15)}
+.dark .file-row-icon.purple{background:rgba(168,85,247,.15)}
+.file-row-label{font-size:14px;font-weight:500;color:var(--color-text)}
+.file-row-sub{font-size:12px;color:var(--color-text-secondary)}
+.section-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#005BFF;background:rgba(0,91,255,.08);padding:4px 10px;border-radius:6px}
+.feature-card{background:var(--color-card);border-radius:20px;padding:32px;border:1px solid var(--color-sep);transition:transform .3s,box-shadow .3s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.08)}
+.dark .feature-card:hover{box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.footer-link{color:var(--color-text-secondary);text-decoration:none;transition:color .2s;font-size:13px}
+.footer-link:hover{color:#005BFF}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--color-sep);border-radius:3px}
+.cover-1{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
+.cover-2{background:linear-gradient(135deg,#2d1b69,#5b2c8e,#e94560)}
+.cover-3{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)}
+.cover-4{background:linear-gradient(135deg,#4a0e4e,#7b2d8e,#e2386e)}
+.cover-5{background:linear-gradient(135deg,#1b2735,#254b62,#3a7ca5)}
+.cover-6{background:linear-gradient(135deg,#3c1053,#ad5389,#f09e9e)}
+.reader-page-bg{background:linear-gradient(180deg,#1a1a2e,#16213e 30%,#0f3460 60%,#1a1a2e)}
+.shelf-search{height:32px;background:var(--color-input);border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:6px;margin:0 12px 8px}
+.shelf-search span{font-size:12px;color:var(--color-text-secondary)}
+.shelf-bottom{height:48px;background:var(--color-bar);border-top:1px solid var(--color-sep);display:flex;align-items:center;justify-content:space-around;padding:0 16px}
+@media(max-width:768px){.mockup-frame{border-radius:16px}.feature-card{padding:20px}.shelf-grid{grid-template-columns:repeat(3,1fr);gap:8px;padding:8px}}
+</style>
+</head>
+<body class="min-h-screen">
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b" style="border-color:var(--color-sep)">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#005BFF">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+</div>
+<span class="font-bold text-[15px] tracking-tight" data-i18n="appName">Kotori Manga</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden sm:flex items-center gap-1">
+<button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+<button class="lang-btn" data-lang="zh" onclick="setLang('zh')">&#20013;&#25991;</button>
+</div>
+<div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></div>
+</div>
+</div>
+</nav>
+<header class="pt-20 pb-16 sm:pt-28 sm:pb-24 px-4 relative overflow-hidden">
+<div class="absolute inset-0 hero-gradient-light dark:opacity-0 transition-opacity duration-500"></div>
+<div class="absolute inset-0 hero-gradient opacity-0 dark:opacity-100 transition-opacity duration-500"></div>
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<div class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-white/20 dark:bg-white/10 backdrop-blur-md border border-white/30">
+<span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+<span class="text-xs font-semibold tracking-wide text-white" data-i18n="heroBadge">Now Available on iOS</span>
+</div>
+<h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-5 leading-[1.05]">
+<span data-i18n="heroTitle">The Ultimate</span><br>
+<span class="bg-gradient-to-r from-cyan-300 via-white to-pink-300 bg-clip-text text-transparent" data-i18n="heroTitleHighlight">Manga Reading</span><br>
+<span data-i18n="heroTitleEnd">Experience</span>
+</h1>
+<p class="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed" data-i18n="heroSubtitle">A beautiful, modern manga reader designed for iOS. Browse, organize, and read your favorite manga with an interface that feels like magic.</p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<a href="#" class="inline-flex items-center gap-2 px-8 py-3.5 bg-white font-semibold rounded-full hover:bg-white/90 transition-all shadow-lg shadow-black/10 text-sm" style="color:#005BFF">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+<span data-i18n="heroDownload">Download on App Store</span>
+</a>
+<a href="#features" class="inline-flex items-center gap-2 px-8 py-3.5 border border-white/40 text-white font-semibold rounded-full hover:bg-white/10 transition-all text-sm">
+<span data-i18n="heroExplore">Explore Features</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+</a>
+</div>
+</div>
+</header>
+<section id="features" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+<div class="text-center mb-16">
+<span class="section-badge mb-4" data-i18n="featuresBadge">Core Features</span>
+<h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-4 mb-4" data-i18n="featuresTitle">Everything You Need</h2>
+<p class="max-w-2xl mx-auto text-base" style="color:var(--color-text-secondary)" data-i18n="featuresSubtitle">From managing your library to immersive reading, every detail is crafted with care.</p>
+</div>
+<div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+<div class="order-2 lg:order-1">
+<span class="section-badge mb-3" data-i18n="shelfBadge">Bookshelf</span>
+<h3 class="text-2xl sm:text-3xl font-bold mb-4" data-i18n="shelfTitle">Your Manga Library</h3>
+<p class="leading-relaxed mb-5" style="color:var(--color-text-secondary)" data-i18n="shelfDesc">A gorgeous grid-based bookshelf with flexible layouts. Switch between 2x2, 3x3, list view, and more. Sort by date added, title, or last read. Search, multi-select, and organize into folders.</p>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="shelfFeature1">Multiple grid layouts (2x2 to 6x6)</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="shelfFeature2">Smart sorting & folder organization</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="shelfFeature3">Download progress & offline reading</span></li>
+</ul>
+</div>
+<div class="order-1 lg:order-2"><div class="mockup-frame max-w-[360px] mx-auto">
+<div class="mockup-status-bar"><span>9:41</span><span style="display:flex;gap:4px">&#9679;&#9679;&#9679;&#9679;&#9675;</span></div>
+<div class="mockup-nav"><span class="text-[13px] font-semibold" data-i18n="shelfNavTitle">My Bookshelf</span><span class="mockup-nav-action" style="font-size:12px;color:var(--color-text-secondary)">3x3 &#9662;</span></div>
+<div class="shelf-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span data-i18n="shelfSearchPlaceholder">Search manga...</span></div>
+<div class="shelf-grid">
+<div class="manga-card"><div class="manga-cover cover-1"><div class="manga-cover-overlay"></div><div class="manga-cover-badge">182p</div></div><span class="manga-title">Spy x Family</span></div>
+<div class="manga-card"><div class="manga-cover cover-2"><div class="manga-cover-overlay"></div><div class="manga-cover-badge">210p</div></div><span class="manga-title">Chainsaw Man</span></div>
+<div class="manga-card"><div class="manga-cover cover-3"><div class="manga-cover-overlay"></div><div class="manga-cover-badge">156p</div></div><span class="manga-title">One Piece</span></div>
+<div class="manga-card"><div class="manga-cover cover-4"><div class="manga-cover-overlay"></div><div class="manga-cover-badge">198p</div></div><span class="manga-title">Jujutsu Kaisen</span></div>
+<div class="manga-card"><div class="manga-cover cover-5"><div class="manga-cover-overlay"></div><div class="manga-cover-badge">143p</div></div><span class="manga-title">Frieren</span></div>
+<div class="manga-card"><div class="manga-cover cover-6"><div class="manga-cover-overlay"></div><div class="manga-cover-badge">267p</div></div><span class="manga-title">Demon Slayer</span></div>
+</div>
+<div class="shelf-bottom">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#005BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+</div>
+</div></div>
+</div>
+<div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+<div><div class="mockup-frame max-w-[360px] mx-auto">
+<div class="mockup-status-bar"><span>9:41</span><span style="display:flex;gap:4px">&#9679;&#9679;&#9679;&#9679;&#9675;</span></div>
+<div class="mockup-nav"><span class="text-[13px] font-semibold" data-i18n="browserNavTitle">Web Browser</span></div>
+<div class="browser-toolbar">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+<div class="browser-address"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4;margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg><span>mangadex.org</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+</div>
+<div style="height:3px;background:var(--color-sep)"><div class="browser-progress"></div></div>
+<div class="browser-content" style="position:relative;min-height:240px">
+<div style="display:flex;flex-wrap:wrap;gap:8px;padding:12px;justify-content:center">
+<div style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+<div style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#2d1b69,#5b2c8e)"></div>
+<div style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#0f2027,#2c5364)"></div>
+<div style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#4a0e4e,#7b2d8e)"></div>
+<div style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#1b2735,#254b62)"></div>
+<div style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#3c1053,#ad5389)"></div>
+</div>
+<div class="browser-fab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+</div>
+</div></div>
+<div>
+<span class="section-badge mb-3" data-i18n="browserBadge">Web Browser</span>
+<h3 class="text-2xl sm:text-3xl font-bold mb-4" data-i18n="browserTitle">Built-in Manga Browser</h3>
+<p class="leading-relaxed mb-5" style="color:var(--color-text-secondary)" data-i18n="browserDesc">Browse manga websites directly within the app. Our intelligent detector automatically finds manga images on any page, letting you download entire chapters to your shelf with a single tap.</p>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="browserFeature1">Auto-detect manga images on any page</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="browserFeature2">One-tap download to bookshelf</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="browserFeature3">Bookmark & share support</span></li>
+</ul>
+</div>
+</div>
+<div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+<div class="order-2 lg:order-1">
+<span class="section-badge mb-3" data-i18n="readerBadge">Reader</span>
+<h3 class="text-2xl sm:text-3xl font-bold mb-4" data-i18n="readerTitle">Immersive Reading</h3>
+<p class="leading-relaxed mb-5" style="color:var(--color-text-secondary)" data-i18n="readerDesc">Experience manga the way it was meant to be read. Choose from single-page, double-page, or vertical strip modes. Enjoy smooth parallax motion effects, intelligent white-border trimming, and auto-split for double-page spreads.</p>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="readerFeature1">Single / Double / Strip modes</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="readerFeature2">Parallax motion & breathing effects</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="readerFeature3">Auto-trim & double-page split</span></li>
+</ul>
+</div>
+<div class="order-1 lg:order-2"><div class="mockup-frame max-w-[360px] mx-auto" style="background:#111">
+<div class="reader-page" style="min-height:340px;position:relative">
+<div class="reader-top-bar" style="position:absolute;top:0;left:0;right:0;z-index:2">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+<span style="color:white;font-size:13px;font-weight:500;flex:1">Chainsaw Man</span>
+<span style="color:rgba(255,255,255,0.6);font-size:11px">42 / 210</span>
+</div>
+<div class="reader-page-bg" style="width:100%;min-height:340px;display:flex;align-items:center;justify-content:center;padding:60px 20px 80px">
+<div style="width:200px;height:280px;background:linear-gradient(180deg,#1a1a2e,#16213e 20%,#0f3460 40%,#1a1a2e 60%,#16213e 80%,#0f3460);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+<div style="position:absolute;top:15%;left:15%;right:15%;bottom:15%;border:1px solid rgba(255,255,255,0.08);border-radius:2px"></div>
+<div style="position:absolute;top:20%;left:20%;width:25%;height:35%;background:rgba(255,255,255,0.04);border-radius:2px"></div>
+<div style="position:absolute;bottom:25%;right:20%;width:30%;height:20%;background:rgba(255,255,255,0.03);border-radius:2px"></div>
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+</div>
+</div>
+<div class="reader-bottom-bar" style="position:absolute;bottom:0;left:0;right:0;z-index:2">
+<input type="range" class="reader-slider" value="20" min="0" max="100">
+<span style="color:white;font-size:11px;font-weight:500;white-space:nowrap">42/210</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+</div>
+</div>
+</div></div>
+</div>
+<div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+<div><div class="mockup-frame max-w-[360px] mx-auto">
+<div class="mockup-status-bar"><span>9:41</span><span style="display:flex;gap:4px">&#9679;&#9679;&#9679;&#9679;&#9675;</span></div>
+<div class="mockup-nav"><span class="mockup-nav-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span><span class="text-[13px] font-semibold" data-i18n="fileBrowserNavTitle">Import Files</span><span class="mockup-nav-action" style="color:#005BFF;font-size:20px;line-height:1">+</span></div>
+<div style="padding:12px 16px 4px;font-size:11px;font-weight:600;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em" data-i18n="fileBrowserSectionLocal">Local</div>
+<div class="file-row"><div class="file-row-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><div><div class="file-row-label" data-i18n="fileBrowserImportLocal">Import from Local</div><div class="file-row-sub">Files, ZIP, EPUB</div></div></div>
+<div class="file-row"><div class="file-row-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></div><div><div class="file-row-label" data-i18n="fileBrowserImportWifi">Wi-Fi Transfer</div><div class="file-row-sub" data-i18n="fileBrowserWifiSub">Transfer via browser</div></div></div>
+<div style="padding:8px 16px 4px;font-size:11px;font-weight:600;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em" data-i18n="fileBrowserSectionCloud">Cloud Services</div>
+<div class="file-row"><div class="file-row-icon orange"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div><div><div class="file-row-label">Google Drive</div></div></div>
+<div class="file-row"><div class="file-row-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div><div><div class="file-row-label">Dropbox</div></div></div>
+<div class="file-row"><div class="file-row-icon purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div><div><div class="file-row-label">iCloud</div></div></div>
+<div style="padding:8px 16px 4px;font-size:11px;font-weight:600;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em" data-i18n="fileBrowserSectionServers">Servers</div>
+<div class="file-row"><div class="file-row-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div><div><div class="file-row-label">SMB / NAS</div><div class="file-row-sub">smb://server/share</div></div></div>
+<div class="file-row"><div class="file-row-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div><div class="file-row-label">WebDAV</div><div class="file-row-sub">http://server</div></div></div>
+<div class="file-row"><div class="file-row-icon orange"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg></div><div><div class="file-row-label">FTP / OPDS</div></div></div>
+</div></div>
+<div>
+<span class="section-badge mb-3" data-i18n="fileBrowserBadge">File Browser</span>
+<h3 class="text-2xl sm:text-3xl font-bold mb-4" data-i18n="fileBrowserTitle">Import from Anywhere</h3>
+<p class="leading-relaxed mb-5" style="color:var(--color-text-secondary)" data-i18n="fileBrowserDesc">Bring your manga from anywhere. Import from local files, Wi-Fi transfer, or connect to cloud services and network servers. SMB, WebDAV, FTP, OPDS, Google Drive, Dropbox, Mega, iCloud - all supported natively.</p>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="fileBrowserFeature1">Wi-Fi drag & drop transfer</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="fileBrowserFeature2">Cloud & NAS server support</span></li>
+<li class="flex items-center gap-3 text-sm" style="color:var(--color-text-secondary)"><svg class="w-5 h-5 flex-shrink-0" style="color:#005BFF" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="fileBrowserFeature3">ZIP, EPUB, PDF support</span></li>
+</ul>
+</div>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+<div class="text-center mb-14"><span class="section-badge mb-4" data-i18n="moreBadge">And More</span><h2 class="text-3xl sm:text-4xl font-bold tracking-tight mt-4" data-i18n="moreTitle">Thoughtful Details</h2></div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="feature-card"><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#EFF6FF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#005BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h4 class="font-semibold text-base mb-2" data-i18n="detail1Title">Reading Progress</h4><p class="text-sm leading-relaxed" style="color:var(--color-text-secondary)" data-i18n="detail1Desc">Auto-saves your reading position. Continue exactly where you left off, or choose to start from the beginning.</p></div>
+<div class="feature-card"><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#FFF7ED"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h4 class="font-semibold text-base mb-2" data-i18n="detail2Title">Motion Effects</h4><p class="text-sm leading-relaxed" style="color:var(--color-text-secondary)" data-i18n="detail2Desc">Parallax motion and breathing effects bring manga pages to life. Powered by on-device Vision segmentation.</p></div>
+<div class="feature-card"><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#F0FDF4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4 class="font-semibold text-base mb-2" data-i18n="detail3Title">Privacy First</h4><p class="text-sm leading-relaxed" style="color:var(--color-text-secondary)" data-i18n="detail3Desc">All processing happens on-device. No account required, no tracking, no data collection. Your manga, your privacy.</p></div>
+<div class="feature-card"><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#FAF5FF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><h4 class="font-semibold text-base mb-2" data-i18n="detail4Title">iCloud Sync</h4><p class="text-sm leading-relaxed" style="color:var(--color-text-secondary)" data-i18n="detail4Desc">Sync your bookshelf and reading progress across all your iOS devices seamlessly via iCloud.</p></div>
+<div class="feature-card"><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#FFF1F2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F50057" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h4 class="font-semibold text-base mb-2" data-i18n="detail5Title">30+ Languages</h4><p class="text-sm leading-relaxed" style="color:var(--color-text-secondary)" data-i18n="detail5Desc">Interface available in over 30 languages including Chinese, Japanese, Korean, Arabic, and many more.</p></div>
+<div class="feature-card"><div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#EFF6FF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#005BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><h4 class="font-semibold text-base mb-2" data-i18n="detail6Title">Volume Button Turn</h4><p class="text-sm leading-relaxed" style="color:var(--color-text-secondary)" data-i18n="detail6Desc">Use hardware volume buttons to flip pages. Perfect for one-handed reading on the go.</p></div>
+</div>
+</section>
+<section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+<div class="text-center py-16 px-8 rounded-3xl relative overflow-hidden" style="background:linear-gradient(135deg,#005BFF,#7B2FF7,#F50057)">
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="relative z-10">
+<h2 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-i18n="ctaTitle">Ready to Start Reading?</h2>
+<p class="text-white/80 text-lg mb-8 max-w-md mx-auto" data-i18n="ctaSubtitle">Download Kotori Manga and build your ultimate manga library today.</p>
+<a href="#" class="inline-flex items-center gap-2 px-8 py-3.5 bg-white font-semibold rounded-full hover:bg-white/90 transition-all shadow-xl text-sm" style="color:#005BFF">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+<span data-i18n="ctaButton">Download on App Store</span>
+</a>
+</div>
+</div>
+</section>
+<footer class="border-t py-10" style="border-color:var(--color-sep)">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-md flex items-center justify-center" style="background:#005BFF">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+</div>
+<span class="font-semibold text-sm" data-i18n="appName">Kotori Manga</span>
+</div>
+<div class="flex items-center gap-6">
+<a href="/policy" class="footer-link">Privacy Policy / &#38544;&#31169;&#25919;&#31574;</a>
+<a href="#" class="footer-link" data-i18n="footerTerms">Terms of Service</a>
+<a href="#" class="footer-link" data-i18n="footerContact">Contact</a>
+</div>
+<p class="text-xs" style="color:var(--color-text-secondary)" data-i18n="footerCopyright">&copy; 2026 Kotori Manga. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+function toggleTheme(){var h=document.documentElement;if(h.classList.contains('dark')){h.classList.remove('dark');h.classList.add('light');localStorage.setItem('theme','light')}else{h.classList.remove('light');h.classList.add('dark');localStorage.setItem('theme','dark')}}
+(function(){var s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}else if(s==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}})();
+var i18n={en:{appName:'Kotori Manga',heroBadge:'Now Available on iOS',heroTitle:'The Ultimate',heroTitleHighlight:'Manga Reading',heroTitleEnd:'Experience',heroSubtitle:'A beautiful, modern manga reader designed for iOS. Browse, organize, and read your favorite manga with an interface that feels like magic.',heroDownload:'Download on App Store',heroExplore:'Explore Features',featuresBadge:'Core Features',featuresTitle:'Everything You Need',featuresSubtitle:'From managing your library to immersive reading, every detail is crafted with care.',shelfBadge:'Bookshelf',shelfTitle:'Your Manga Library',shelfDesc:'A gorgeous grid-based bookshelf with flexible layouts. Switch between 2x2, 3x3, list view, and more. Sort by date added, title, or last read. Search, multi-select, and organize into folders.',shelfFeature1:'Multiple grid layouts (2x2 to 6x6)',shelfFeature2:'Smart sorting & folder organization',shelfFeature3:'Download progress & offline reading',shelfNavTitle:'My Bookshelf',shelfSearchPlaceholder:'Search manga...',browserBadge:'Web Browser',browserTitle:'Built-in Manga Browser',browserDesc:'Browse manga websites directly within the app. Our intelligent detector automatically finds manga images on any page, letting you download entire chapters to your shelf with a single tap.',browserFeature1:'Auto-detect manga images on any page',browserFeature2:'One-tap download to bookshelf',browserFeature3:'Bookmark & share support',browserNavTitle:'Web Browser',readerBadge:'Reader',readerTitle:'Immersive Reading',readerDesc:'Experience manga the way it was meant to be read. Choose from single-page, double-page, or vertical strip modes. Enjoy smooth parallax motion effects, intelligent white-border trimming, and auto-split for double-page spreads.',readerFeature1:'Single / Double / Strip modes',readerFeature2:'Parallax motion & breathing effects',readerFeature3:'Auto-trim & double-page split',fileBrowserBadge:'File Browser',fileBrowserTitle:'Import from Anywhere',fileBrowserDesc:'Bring your manga from anywhere. Import from local files, Wi-Fi transfer, or connect to cloud services and network servers. SMB, WebDAV, FTP, OPDS, Google Drive, Dropbox, Mega, iCloud - all supported natively.',fileBrowserFeature1:'Wi-Fi drag & drop transfer',fileBrowserFeature2:'Cloud & NAS server support',fileBrowserFeature3:'ZIP, EPUB, PDF support',fileBrowserNavTitle:'Import Files',fileBrowserSectionLocal:'Local',fileBrowserImportLocal:'Import from Local',fileBrowserImportWifi:'Wi-Fi Transfer',fileBrowserWifiSub:'Transfer via browser',fileBrowserSectionCloud:'Cloud Services',fileBrowserSectionServers:'Servers',moreBadge:'And More',moreTitle:'Thoughtful Details',detail1Title:'Reading Progress',detail1Desc:'Auto-saves your reading position. Continue exactly where you left off, or choose to start from the beginning.',detail2Title:'Motion Effects',detail2Desc:'Parallax motion and breathing effects bring manga pages to life. Powered by on-device Vision segmentation.',detail3Title:'Privacy First',detail3Desc:'All processing happens on-device. No account required, no tracking, no data collection. Your manga, your privacy.',detail4Title:'iCloud Sync',detail4Desc:'Sync your bookshelf and reading progress across all your iOS devices seamlessly via iCloud.',detail5Title:'30+ Languages',detail5Desc:'Interface available in over 30 languages including Chinese, Japanese, Korean, Arabic, and many more.',detail6Title:'Volume Button Turn',detail6Desc:'Use hardware volume buttons to flip pages. Perfect for one-handed reading on the go.',ctaTitle:'Ready to Start Reading?',ctaSubtitle:'Download Kotori Manga and build your ultimate manga library today.',ctaButton:'Download on App Store',footerTerms:'Terms of Service',footerContact:'Contact',footerCopyright:'\u00a9 2026 Kotori Manga. All rights reserved.'},zh:{appName:'\u5c0f\u9e1f\u6f2b\u753b',heroBadge:'\u73b0\u5df2\u767b\u9646 iOS',heroTitle:'\u7ec8\u6781',heroTitleHighlight:'\u6f2b\u753b\u9605\u8bfb',heroTitleEnd:'\u4f53\u9a8c',heroSubtitle:'\u4e00\u6b3e\u4e3a iOS \u6253\u9020\u7684\u4f18\u96c5\u3001\u73b0\u4ee3\u6f2b\u753b\u9605\u8bfb\u5668\u3002\u6d4f\u89c8\u3001\u6574\u7406\u3001\u9605\u8bfb\u4f60\u6700\u7231\u7684\u6f2b\u753b\uff0c\u754c\u9762\u5982\u9b54\u6cd5\u822c\u6d41\u7545\u3002',heroDownload:'\u4ece App Store \u4e0b\u8f7d',heroExplore:'\u63a2\u7d22\u529f\u80fd',featuresBadge:'\u6838\u5fc3\u529f\u80fd',featuresTitle:'\u4e00\u5207\u6240\u9700',featuresSubtitle:'\u4ece\u7ba1\u7406\u4e66\u5e93\u5230\u6c89\u6d78\u5f0f\u9605\u8bfb\uff0c\u6bcf\u4e2a\u7ec6\u8282\u90fd\u7cbe\u5fc3\u6253\u78e8\u3002',shelfBadge:'\u4e66\u67b6',shelfTitle:'\u4f60\u7684\u6f2b\u753b\u56fe\u4e66\u9986',shelfDesc:'\u7cbe\u7f8e\u7684\u7f51\u683c\u4e66\u67b6\uff0c\u7075\u6d3b\u5207\u6362\u5e03\u5c40\u3002\u652f\u6301 2x2\u30013x3\u3001\u5217\u8868\u89c6\u56fe\u7b49\u591a\u79cd\u6a21\u5f0f\u3002\u6309\u6dfb\u52a0\u65f6\u95f4\u3001\u6807\u9898\u6216\u6700\u8fd1\u9605\u8bfb\u6392\u5e8f\u3002\u641c\u7d22\u3001\u591a\u9009\u3001\u6587\u4ef6\u5939\u6574\u7406\u3002',shelfFeature1:'\u591a\u79cd\u7f51\u683c\u5e03\u5c40\uff082x2 \u5230 6x6\uff09',shelfFeature2:'\u667a\u80fd\u6392\u5e8f\u4e0e\u6587\u4ef6\u5939\u6574\u7406',shelfFeature3:'\u4e0b\u8f7d\u8fdb\u5ea6\u4e0e\u79bb\u7ebf\u9605\u8bfb',shelfNavTitle:'\u6211\u7684\u4e66\u67b6',shelfSearchPlaceholder:'\u641c\u7d22\u6f2b\u753b...',browserBadge:'\u7f51\u9875\u6d4f\u89c8\u5668',browserTitle:'\u5185\u7f6e\u6f2b\u753b\u6d4f\u89c8\u5668',browserDesc:'\u5728\u5e94\u7528\u5185\u76f4\u63a5\u6d4f\u89c8\u6f2b\u753b\u7f51\u7ad9\u3002\u667a\u80fd\u68c0\u6d4b\u5668\u81ea\u52a8\u8bc6\u522b\u9875\u9762\u4e0a\u7684\u6f2b\u753b\u56fe\u7247\uff0c\u4e00\u952e\u4e0b\u8f7d\u6574\u7ae0\u5230\u4e66\u67b6\u3002',browserFeature1:'\u81ea\u52a8\u8bc6\u522b\u9875\u9762\u6f2b\u753b\u56fe\u7247',browserFeature2:'\u4e00\u952e\u4e0b\u8f7d\u5230\u4e66\u67b6',browserFeature3:'\u4e66\u7b7e\u4e0e\u5206\u4eab\u652f\u6301',browserNavTitle:'\u7f51\u9875\u6d4f\u89c8\u5668',readerBadge:'\u9605\u8bfb\u5668',readerTitle:'\u6c89\u6d78\u5f0f\u9605\u8bfb',readerDesc:'\u4ee5\u6f2b\u753b\u5e94\u6709\u7684\u65b9\u5f0f\u4f53\u9a8c\u9605\u8bfb\u3002\u652f\u6301\u5355\u9875\u3001\u53cc\u9875\u3001\u6761\u6f2b\u6a21\u5f0f\u3002\u6d41\u7545\u7684\u89c6\u5dee\u52a8\u6548\u3001\u667a\u80fd\u767d\u8fb9\u88c1\u526a\u3001\u53cc\u9875\u81ea\u52a8\u62c6\u5206\u3002',readerFeature1:'\u5355\u9875 / \u53cc\u9875 / \u6761\u6f2b\u6a21\u5f0f',readerFeature2:'\u89c6\u5dee\u6eda\u52a8\u4e0e\u547c\u5438\u52a8\u6548',readerFeature3:'自动裁剪与双页拆分',fileBrowserBadge:'文件浏览器',fileBrowserTitle:'从任何地方导入',fileBrowserDesc:'从任何地方导入漫画。支持本地文件、Wi-Fi 传输、云服务和网络服务器。SMB、WebDAV、FTP、OPDS、Google Drive、Dropbox、Mega、iCloud — 全部原生支持。',fileBrowserFeature1:'Wi-Fi 拖拽传输',fileBrowserFeature2:'云端与 NAS 服务器支持',fileBrowserFeature3:'支持 ZIP、EPUB、PDF 格式',fileBrowserNavTitle:'导入文件',fileBrowserSectionLocal:'本地',fileBrowserImportLocal:'从本地导入',fileBrowserImportWifi:'Wi-Fi 传输',fileBrowserWifiSub:'通过浏览器传输',fileBrowserSectionCloud:'云服务',fileBrowserSectionServers:'服务器',moreBadge:'更多功能',moreTitle:'精心细节',detail1Title:'阅读进度',detail1Desc:'自动保存阅读位置。精确续读，或选择从头开始。',detail2Title:'动态效果',detail2Desc:'视差滚动和呼吸效果让漫画页面活起来。基于设备端 Vision 分割技术。',detail3Title:'隐私优先',detail3Desc:'所有处理均在设备端完成。无需账户，不进行追踪，不收集数据。你的漫画，你的隐私。',detail4Title:'iCloud 同步',detail4Desc:'通过 iCloud 在所有 iOS 设备之间无缝同步书架和阅读进度。',detail5Title:'30+ 种语言',detail5Desc:'界面支持 30 多种语言，包括中文、日语、韩语、阿拉伯语等。',detail6Title:'音量键翻页',detail6Desc:'使用硬件音量按钮翻页。适合单手阅读。',ctaTitle:'准备好开始阅读了吗？',ctaSubtitle:'下载小鸟漫画，打造你的终极漫画图书馆。',ctaButton:'从 App Store 下载',footerTerms:'服务条款',footerContact:'联系我们',footerCopyright:'© 2026 小鸟漫画。保留所有权利。'}};
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});document.querySelector('.lang-btn[data-lang="'+lang+'"]').classList.add('active');document.documentElement.lang=lang;localStorage.setItem('lang',lang);applyLang(lang)}
+function applyLang(lang){var data=i18n[lang]||i18n['en'];document.querySelectorAll('[data-i18n]').forEach(function(el){var key=el.getAttribute('data-i18n');if(data[key]){el.textContent=data[key]}});if(lang==='zh'){document.title='小鸟漫画 — 终极漫画阅读器'}else{document.title='Kotori Manga — The Ultimate Manga Reader'}}
+(function(){var s=localStorage.getItem('lang')||'en';setLang(s)})();
+</script>
+</body>
+</html>
 
