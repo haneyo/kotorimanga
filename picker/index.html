@@ -26,9 +26,6 @@
   </div>
 </div>
 
-<!-- Google Picker API -->
-<script async defer src="https://apis.google.com/js/api.js"></script>
-
 <script type="text/javascript">
   var params = new URLSearchParams(window.location.search);
   var API_KEY = params.get('key');
@@ -42,16 +39,15 @@
   var CLIENT_ID = '798405617409-91r7urrlnmtrsg9jojgaakfg4ck3fsap';
   var CLIENT_SECRET = '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';
   var ACCESS_TOKEN = null;
+  var _gapiReady = false;
 
   // ===== 方式 1：URL 参数中有 token（App OAuth 获取后传入） =====
   var urlToken = params.get('token');
   if (urlToken) {
     ACCESS_TOKEN = urlToken;
-    showLoading('正在加载文件选择器...');
-    gapi.load('picker', { callback: onPickerApiLoad });
   }
 
-  // ===== PKCE 工具函数（备选：无 token 时，页面内完成 OAuth） =====
+  // ===== PKCE 工具函数 =====
   function generateCodeVerifier() {
     var array = new Uint8Array(64);
     crypto.getRandomValues(array);
@@ -80,8 +76,8 @@
   if (!ACCESS_TOKEN) {
     var urlCode = params.get('code');
     if (urlCode) {
-      cleanUrl = window.location.origin + window.location.pathname;
-      hash = window.location.hash;
+      var cleanUrl = window.location.origin + window.location.pathname;
+      var hash = window.location.hash;
       history.replaceState(null, null, cleanUrl + hash);
 
       var storedVerifier = sessionStorage.getItem('pkce_code_verifier');
@@ -92,15 +88,13 @@
         showError('登录状态丢失，请重新登录');
       }
     } else {
-      // 检查 URL hash 中是否有 access_token（旧版兼容）
+      // 检查 URL hash 中是否有 access_token
       if (window.location.hash) {
         var hashParams = new URLSearchParams(window.location.hash.substring(1));
         var hashToken = hashParams.get('access_token');
         if (hashToken) {
           ACCESS_TOKEN = hashToken;
           history.replaceState(null, null, window.location.pathname + window.location.search);
-          showLoading('正在加载文件选择器...');
-          gapi.load('picker', { callback: onPickerApiLoad });
         }
       }
     }
@@ -111,7 +105,27 @@
     showLoginScreen();
   }
 
-  // ===== 用 code 交换 token（PKCE 备选流程） =====
+  // ===== 加载 Google Picker API =====
+  function loadPickerAPI() {
+    if (ACCESS_TOKEN) {
+      showLoading('正在加载文件选择器...');
+      // 动态创建 script 标签加载 api.js
+      var script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/api.js';
+      script.onload = function() {
+        _gapiReady = true;
+        gapi.load('picker', { callback: onPickerApiLoad });
+      };
+      script.onerror = function() {
+        showError('无法加载 Google API');
+      };
+      document.body.appendChild(script);
+    } else {
+      // 没有 token 且没有 code → 已显示登录按钮，不加载 Picker
+    }
+  }
+
+  // ===== 用 code 交换 token =====
   function exchangeCodeForToken(code, verifier) {
     showLoading('正在完成登录...');
     var xhr = new XMLHttpRequest();
@@ -124,8 +138,7 @@
           var response = JSON.parse(xhr.responseText);
           if (response.access_token) {
             ACCESS_TOKEN = response.access_token;
-            showLoading('登录成功，正在加载文件选择器...');
-            gapi.load('picker', { callback: onPickerApiLoad });
+            loadPickerAPI();
           } else {
             showError('获取访问令牌失败：' + (response.error || '未知错误'));
           }
@@ -177,7 +190,7 @@
     errEl.style.display = 'block';
   }
 
-  // ===== PKCE OAuth 登录（备用：有在线用户时在 Safari 中登录） =====
+  // ===== PKCE OAuth 登录 =====
   async function startOAuth() {
     showLoading('正在准备登录...');
     document.getElementById('login-btn').style.display = 'none';
@@ -245,6 +258,11 @@
     } else if (data.action == google.picker.Action.CANCEL) {
       window.location.href = SCHEME + '://picker?cancel=1';
     }
+  }
+
+  // ===== 启动：如果有 token，加载 Picker API =====
+  if (ACCESS_TOKEN) {
+    loadPickerAPI();
   }
 </script>
 </body>
