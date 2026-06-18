@@ -41,6 +41,7 @@
   }
 
   var CLIENT_ID = '798405617409-91r7urrlnmtrsg9jojgaakfg4ck3fsap';
+  var CLIENT_SECRET = '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';
   var ACCESS_TOKEN = null;
 
   // ===== PKCE 工具函数 =====
@@ -147,6 +148,7 @@
     var body = new URLSearchParams({
       code: code,
       client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
       redirect_uri: REDIRECT_URI,
       code_verifier: verifier,
       grant_type: 'authorization_code'
