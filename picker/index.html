@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: white; overflow: hidden; font-family: -apple-system, sans-serif; }
+  #picker-container { width: 100vw; height: 100vh; position: relative; }
+</style>
+</head>
+<body>
+<div id="picker-container"></div>
+<script type="text/javascript">
+  // Get token and key from URL query parameters
+  var params = new URLSearchParams(window.location.search);
+  var ACCESS_TOKEN = params.get('token');
+  var API_KEY = params.get('key');
+  var SCHEME = params.get('scheme') || 'kotorimanga';
 
+  function loadPicker() {
+    gapi.load('picker', { callback: onPickerApiLoad });
+  }
+
+  function onPickerApiLoad() {
+    var view = new google.picker.View(google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS);
+    view.setMimeTypes('application/zip,application/x-cbz,application/x-cbr,application/x-rar,application/pdf,application/epub+zip,image/jpeg,image/png,image/gif,image/webp,application/vnd.google-apps.folder');
+
+    var picker = new google.picker.PickerBuilder()
+        .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+        .enableFeature(google.picker.Feature.NAV_HIDDEN)
+        .setTitle('Select manga files')
+        .setOAuthToken(ACCESS_TOKEN)
+        .setDeveloperKey(API_KEY)
+        .addView(view)
+        .addView(new google.picker.DocsUploadView())
+        .setCallback(pickerCallback)
+        .build();
+    picker.setVisible(true);
+  }
+
+  function pickerCallback(data) {
+    if (data.action == google.picker.Action.PICKED) {
+      var files = [];
+      for (var i = 0; i < data.docs.length; i++) {
+        var doc = data.docs[i];
+        files.push({
+          id: doc.id,
+          name: doc.name,
+          mimeType: doc.mimeType
+        });
+      }
+      var encoded = encodeURIComponent(JSON.stringify(files));
+      window.location.href = SCHEME + '://picker?files=' + encoded;
+    } else if (data.action == google.picker.Action.CANCEL) {
+      window.location.href = SCHEME + '://picker?cancel=1';
+    }
+  }
+</script>
+<script async defer src="https://apis.google.com/js/api.js?onload=loadPicker"></script>
+</body>
+</html>
