@@ -19,15 +19,13 @@
 <div id="picker-container">
   <div id="login-container">
     <h2 id="status-title">准备中...</h2>
-    <p id="status-desc">正在启动 Google 登录</p>
+    <p id="status-desc">正在启动</p>
     <div id="loading">⏳ 请稍候</div>
     <div id="error"></div>
     <button id="login-btn" style="display:none;" onclick="startOAuth()">使用 Google 账号登录</button>
   </div>
 </div>
 
-<!-- Google Identity Services -->
-<script src="https://accounts.google.com/gsi/client"></script>
 <!-- Google Picker API -->
 <script async defer src="https://apis.google.com/js/api.js"></script>
 
@@ -36,7 +34,6 @@
   var API_KEY = params.get('key');
   var SCHEME = params.get('scheme') || 'kotorimanga';
 
-  // 如果没有 API Key，显示错误
   if (!API_KEY) {
     showError('缺少 API Key 参数');
   }
@@ -44,7 +41,7 @@
   var CLIENT_ID = '798405617409-7orp581n5cno3m32f06i76mtqo7msi0o.apps.googleusercontent.com';
   var ACCESS_TOKEN = null;
 
-  // 尝试从 URL fragment 中读取 token（OAuth redirect 模式返回）
+  // ===== 检查 URL hash 中是否有 access_token（OAuth implicit flow 返回） =====
   if (window.location.hash) {
     var hashParams = new URLSearchParams(window.location.hash.substring(1));
     var hashToken = hashParams.get('access_token');
@@ -55,18 +52,17 @@
     }
   }
 
-  // 检查 URL 参数中是否有预设 token（App 传入）
+  // 检查 URL 参数中是否有预设 token（App 传入的旧版兼容）
   var urlToken = params.get('token');
-  if (urlToken) {
+  if (!ACCESS_TOKEN && urlToken) {
     ACCESS_TOKEN = urlToken;
   }
 
-  // 准备好后加载 Picker
+  // 有 token → 加载 Picker；没有 → 显示登录按钮
   if (ACCESS_TOKEN) {
     showLoading('正在加载文件选择器...');
     gapi.load('picker', { callback: onPickerApiLoad });
   } else {
-    // 没有 token，显示登录按钮
     showLoginScreen();
   }
 
@@ -95,43 +91,31 @@
     errEl.style.display = 'block';
   }
 
+  // ===== OAuth implicit flow — 跳转到 accounts.google.com =====
   function startOAuth() {
     showLoading('正在打开 Google 登录...');
-    document.getElementById('login-btn').style.display = 'none';
 
-    try {
-      var client = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        callback: function(response) {
-          if (response && response.access_token) {
-            ACCESS_TOKEN = response.access_token;
-            showLoading('登录成功，正在加载文件选择器...');
-            gapi.load('picker', { callback: onPickerApiLoad });
-          } else if (response && response.error) {
-            if (response.error === 'user_cancelled' || response.error === 'access_denied') {
-              window.location.href = SCHEME + '://picker?cancel=1';
-            } else {
-              showError('登录失败：' + response.error);
-            }
-          }
-        },
-        error_callback: function(err) {
-          console.error('GIS error:', err);
-          // 弹出窗口可能被 WKWebView 阻止，尝试重新显示按钮
-          showLoginScreen();
-          document.getElementById('status-desc').textContent = '登录弹窗被阻止，请再次点击按钮重试（错误：' + (err.type || 'unknown') + '）';
-        }
-      });
-      client.requestAccessToken();
-    } catch(e) {
-      console.error('OAuth error:', e);
-      showError('启动登录失败：' + e.message);
-      // 5 秒后重新显示登录按钮
-      setTimeout(showLoginScreen, 5000);
-    }
+    var baseURL = 'https://accounts.google.com/o/oauth2/v2/auth';
+    // 当前页面 URL（不含 hash）作为 redirect_uri
+    var redirectUri = window.location.origin + window.location.pathname;
+    // 清除 search 参数中的 key 和 scheme，避免它们出现在重定向中
+    var cleanRedirect = redirectUri;
+
+    var oauthParams = new URLSearchParams({
+      client_id: CLIENT_ID,
+      response_type: 'token',        // implicit flow
+      scope: 'https://www.googleapis.com/auth/drive.file',
+      redirect_uri: cleanRedirect,
+      include_granted_scopes: 'true',
+      state: 'pass-through-value'
+    });
+
+    var authUrl = baseURL + '?' + oauthParams.toString();
+    console.log('OAuth redirect to:', authUrl);
+    window.location.href = authUrl;
   }
 
+  // ===== Google Picker =====
   function onPickerApiLoad() {
     if (!ACCESS_TOKEN) {
       showError('缺少访问令牌');
