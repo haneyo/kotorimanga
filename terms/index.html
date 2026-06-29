@@ -1,149 +1,167 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="zh" class="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terms of Service - Kotori Manga</title>
+<title>服务条款 - Kotori Manga</title>
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
-:root{--color-bg:#F6F7F9;--color-card:#FFFFFF;--color-input:#EFF0F4;--color-text:#19191D;--color-text-secondary:#8E8E93;--color-sep:#E5E5EA;--color-cover:#E8EAF0;--color-bar:#FFFFFF;--color-accent:#005BFF}
-.dark{--color-bg:#000000;--color-card:#1E1E1E;--color-input:#1C1C1E;--color-text:#FFFFFF;--color-text-secondary:#8E8E93;--color-sep:#38383A;--color-cover:#2C2C2E;--color-bar:#1A1A1A;--color-accent:#3B82F6}
-html{scroll-behavior:smooth}
-body{background:var(--color-bg);color:var(--color-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;transition:background .3s,color .3s;margin:0}
-.theme-toggle{position:relative;width:48px;height:26px;background:var(--color-input);border-radius:13px;cursor:pointer;transition:background .3s;border:1px solid var(--color-sep);flex-shrink:0}
-.theme-toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#005BFF;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.dark .theme-toggle::after{transform:translateX(22px)}
-.lang-select{appearance:none;-webkit-appearance:none;padding:6px 28px 6px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--color-sep);background:transparent;color:var(--color-text-secondary);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
-.lang-select:focus{outline:none;border-color:var(--color-accent)}
-.nav-blur{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--color-bar)}
-.footer-link{color:var(--color-text-secondary);text-decoration:none;transition:color .2s;font-size:13px}
-.footer-link:hover{color:#005BFF}
-.footer-link.mail-link{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
-.footer-link.mail-link::after{content:'\2197';font-size:10px;opacity:.5;transition:opacity .2s}
-.footer-link.mail-link:hover::after{opacity:1}
-.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
-.fade-in.visible{opacity:1;transform:translateY(0)}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--color-sep);border-radius:3px}
-.highlight-box{background:rgba(0,91,255,.06);border:1px solid rgba(0,91,255,.15);padding:18px 22px;border-radius:14px;margin:24px 0}
-.dark .highlight-box{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2)}
-.terms-content h2{font-size:1.25rem;font-weight:700;margin-top:2rem;margin-bottom:0.75rem;display:flex;align-items:center;gap:10px}
-.terms-content h2::before{content:'';display:inline-block;width:4px;height:20px;background:var(--color-accent);border-radius:2px;flex-shrink:0}
-.terms-content p,.terms-content li{font-size:0.9375rem;line-height:1.7;color:var(--color-text-secondary)}
-.terms-content ul{padding-left:1.25rem;margin:0.75rem 0}
-.terms-content li{margin-bottom:0.5rem}
-.terms-content li strong{color:var(--color-text)}
-.terms-content strong{color:var(--color-text)}
+:root{--bg:#fff;--bg-secondary:#f5f5f7;--card:#fff;--text:#1d1d1f;--text-secondary:#86868b;--text-tertiary:#aeaeb2;--sep:#d2d2d7;--accent:#0071e3;--nav-blur:rgba(255,255,255,.8)}
+.dark{--bg:#000;--bg-secondary:#1c1c1e;--card:#1c1c1e;--text:#f5f5f7;--text-secondary:#86868b;--text-tertiary:#636366;--sep:#38383a;--accent:#2997ff;--nav-blur:rgba(0,0,0,.8)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter",sans-serif;line-height:1.47059;transition:background .3s,color .3s}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:var(--nav-blur);border-bottom:1px solid var(--sep)}
+.nav-inner{max-width:700px;margin:0 auto;padding:0 22px;height:48px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text)}
+.nav-logo img{width:22px;height:22px;border-radius:5px}
+.nav-logo span{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.theme-toggle{position:relative;width:36px;height:20px;background:var(--bg-secondary);border-radius:10px;cursor:pointer;border:1px solid var(--sep);transition:all .3s;flex-shrink:0}
+.theme-toggle::after{content:'';position:absolute;top:1.5px;left:1.5px;width:15px;height:15px;border-radius:50%;background:var(--accent);transition:transform .3s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.dark .theme-toggle::after{transform:translateX(15px)}
+.lang-select{appearance:none;-webkit-appearance:none;padding:4px 22px 4px 10px;border-radius:14px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--sep);background:transparent;color:var(--text-secondary);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
+.lang-select:focus{outline:none;border-color:var(--accent)}
+main{padding:84px 22px 60px}
+.content{max-width:700px;margin:0 auto}
+.header{text-align:center;margin-bottom:40px}
+.header-badge{display:inline-block;padding:3px 12px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(0,113,227,.1);color:var(--accent);margin-bottom:12px}
+.header h1{font-size:36px;font-weight:700;letter-spacing:-.003em;margin-bottom:6px}
+.last-updated{font-size:13px;color:var(--text-secondary)}
+.legal-card{background:var(--card);border-radius:20px;padding:40px;border:1px solid var(--sep);box-shadow:0 0 0 0.5px rgba(0,0,0,.04),0 2px 6px rgba(0,0,0,.03)}
+.dark .legal-card{box-shadow:none}
+.legal-content h2{font-size:18px;font-weight:700;margin:28px 0 10px;display:flex;align-items:center;gap:8px}
+.legal-content h2:first-child{margin-top:0}
+.legal-content h2::before{content:'';display:inline-block;width:3px;height:18px;background:var(--accent);border-radius:2px;flex-shrink:0}
+.legal-content p,.legal-content li{font-size:14px;line-height:1.7;color:var(--text-secondary)}
+.legal-content p{margin-bottom:12px}
+.legal-content ul{padding-left:18px;margin:10px 0 16px}
+.legal-content li{margin-bottom:6px}
+.legal-content li strong{color:var(--text)}
+.legal-content strong{color:var(--text)}
+.highlight-box{background:rgba(0,113,227,.06);border:1px solid rgba(0,113,227,.15);padding:16px 20px;border-radius:12px;margin:16px 0 24px}
+.dark .highlight-box{background:rgba(41,151,255,.08);border-color:rgba(41,151,255,.2)}
+.highlight-box strong{color:var(--accent)}
+footer{padding:32px 22px;border-top:1px solid var(--sep)}
+.footer-inner{max-width:700px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.footer-links{display:flex;gap:16px}
+.footer-links a{color:var(--text-secondary);text-decoration:none;font-size:12px;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{font-size:11px;color:var(--text-tertiary)}
+@media(max-width:640px){
+.legal-card{padding:24px 20px;border-radius:16px}
+.header h1{font-size:28px}
+}
 </style>
 </head>
-<body class="min-h-screen">
-
-<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b" style="border-color:var(--color-sep)">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-<div class="flex items-center gap-2.5">
-<a href="/" class="flex items-center gap-2.5 no-underline" style="color:inherit">
-<img src="/images/logo.png" alt="Kotori Manga" class="w-8 h-8 rounded-lg object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-<div class="w-8 h-8 rounded-lg items-center justify-center hidden" style="background:#005BFF">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-</div>
-<span class="font-bold text-[15px] tracking-tight">Kotori Manga</span>
+<body>
+<nav class="nav">
+<div class="nav-inner">
+<a href="/" class="nav-logo">
+<img src="/images/logo.png" alt="Kotori Manga">
+<span>Kotori Manga</span>
 </a>
-</div>
-<div class="flex items-center gap-3">
-<select class="lang-select" id="langSelect" aria-label="Select language">
-<option value="en">English</option>
+<div class="nav-actions">
+<select class="lang-select" id="langSelect" aria-label="Language">
 <option value="zh">中文</option>
+<option value="en">English</option>
 </select>
-<div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></div>
+<div class="theme-toggle" onclick="toggleTheme()"></div>
 </div>
 </div>
 </nav>
 
-<main class="pt-20 pb-16 px-4">
-<div class="max-w-3xl mx-auto">
-
-<div class="fade-in visible mb-8 text-center">
-<div class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide mb-3" style="background:rgba(0,91,255,.08);color:#005BFF">Legal</div>
-<h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight" id="pageTitle">Terms of Service</h1>
-<p class="mt-2 text-sm" style="color:var(--color-text-secondary)" id="lastUpdated">Last Updated: June 2026</p>
+<main>
+<div class="content">
+<div class="header">
+<div class="header-badge">Legal</div>
+<h1 id="pageTitle">服务条款</h1>
+<p class="last-updated" id="lastUpdated">最近更新：2026年6月</p>
 </div>
 
-<div class="fade-in visible" style="background:var(--color-card);border-radius:24px;padding:40px;border:1px solid var(--color-sep);box-shadow:0 0 0 0.5px rgba(0,0,0,.04),0 2px 6px rgba(0,0,0,.03),0 12px 32px rgba(0,0,0,.07)">
-
-<!-- English Content -->
-<div id="content-en" class="terms-content">
-
-<h2>1. Acceptance of Terms</h2>
-<p>By downloading, installing, or using Kotori Manga (the "App"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the App.</p>
-
-<h2>2. Nature of Service (Local-First Tool)</h2>
-<p>Kotori Manga is a local-first content viewer and file management utility. The App provides connectivity tools allowing you to link your independent cloud storage (e.g., Google Drive, MEGA, WebDAV, SMB). <strong>We do not provide, host, host-link, or index any manga content or media files.</strong></p>
-
-<h2>3. User Content and Responsibilities</h2>
-<p>You retain full ownership and responsibility for any files, links, or contents you import, stream, or download through the App. You warrant that your use of the App complies with all applicable copyright laws and your cloud service provider's policies. You shall not use the App for any illegal purposes.</p>
-
-<h2>4. Disclaimer of Warranties</h2>
-<p>The App is provided "AS IS" and "AS AVAILABLE" without warranties of any kind. Kotori Manga is not liable for data loss, network expenses incurred by cloud fetching, or interruption of third-party cloud services.</p>
-
-<h2>5. Termination</h2>
-<p>We reserve the right to modify, suspend, or discontinue the App or terminate your access to the service at any time without prior notice if you violate these Terms.</p>
-
-<h2>6. Contact Us</h2>
-<p>If you have any questions about these Terms, please contact us via email.</p>
-</div>
-
+<div class="legal-card">
 <!-- Chinese Content -->
-<div id="content-zh" class="terms-content" style="display:none">
+<div id="content-zh" class="legal-content">
 
 <h2>1. 条款确认与接受</h2>
 <p>当您下载、安装或使用 Kotori Manga（以下简称"本应用"）时，即表示您同意接受本服务条款的所有内容。如果您不同意这些条款，请勿使用本应用。</p>
 
 <h2>2. 服务性质（本地优先工具）</h2>
-<p>Kotori Manga 是一款"本地优先"的内容查看器与文件管理工具。本应用提供连接技术，允许您关联您独立的云端存储（如 Google Drive、MEGA、WebDAV、SMB）。<strong>我们不提供、不托管、不索引任何漫画内容或媒体文件。</strong></p>
+<p>Kotori Manga 是一款"本地优先"的内容查看器与文件管理工具。本应用提供连接技术，允许您关联您独立的云存储或网络存储（包括但不限于本地文件、WebDAV、SMB、FTP、OPDS、Google Drive、Dropbox、MEGA、Box）。<strong>我们不提供、不托管、不索引任何漫画内容或媒体文件。</strong></p>
 
 <h2>3. 用户内容与法律责任</h2>
 <p>您对通过本应用导入、播放或下载的所有文件、链接及内容保留完全所有权并承担全部责任。您必须确保使用本应用的行为符合所有适用的版权法律及您的云存储提供商的政策。您不得将本应用用于任何非法用途。</p>
 
-<h2>4. 免责声明</h2>
-<p>本应用按"现状"和"现有"状态提供，不附带任何形式的保证。Kotori Manga 对任何数据丢失、因云端加载产生的网络资费、或第三方云服务的无故中断不承担任何法律责任。</p>
+<h2>4. 内购与退款</h2>
+<p>本应用提供可选内购项目（"去广告"），为一次性买断，永久有效。所有内购通过 Apple App Store 处理，退款政策遵循 Apple 的官方规定。如果您对购买有任何疑问，请联系 Apple 支持。</p>
 
-<h2>5. 服务终止</h2>
+<h2>5. 免责声明</h2>
+<p>本应用按"现状"和"现有"状态提供，不附带任何形式的担保（无论是明示还是默示）。Kotori Manga 对任何数据丢失、因云端加载产生的网络资费、或第三方云服务的无故中断不承担任何法律责任。</p>
+
+<h2>6. 服务终止</h2>
 <p>如果您违反本服务条款的任何规定，我们保留在不经事先通知的情况下，随时修改、暂停或终止本应用服务，或限制您访问的权利。</p>
 
-<h2>6. 联系我们</h2>
+<h2>7. 联系我们</h2>
 <p>如果您对本条款有任何疑问，请通过电子邮件与我们联系。</p>
+
+</div>
+
+<!-- English Content -->
+<div id="content-en" class="legal-content" style="display:none">
+
+<h2>1. Acceptance of Terms</h2>
+<p>By downloading, installing, or using Kotori Manga (the "App"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the App.</p>
+
+<h2>2. Nature of Service (Local-First Tool)</h2>
+<p>Kotori Manga is a local-first content viewer and file management utility. The App provides connectivity tools allowing you to link your independent local or cloud storage (including but not limited to local files, WebDAV, SMB, FTP, OPDS, Google Drive, Dropbox, MEGA, and Box). <strong>We do not provide, host, or index any manga content or media files.</strong></p>
+
+<h2>3. User Content and Responsibilities</h2>
+<p>You retain full ownership and responsibility for any files, links, or contents you import, stream, or download through the App. You warrant that your use of the App complies with all applicable copyright laws and your cloud service provider's policies. You shall not use the App for any illegal purposes.</p>
+
+<h2>4. In-App Purchases and Refunds</h2>
+<p>The App offers optional in-app purchases (e.g., "Remove Ads"), which are one-time purchases valid permanently. All purchases are processed through the Apple App Store, and refund policies follow Apple's official regulations. If you have questions about a purchase, please contact Apple Support.</p>
+
+<h2>5. Disclaimer of Warranties</h2>
+<p>The App is provided "AS IS" and "AS AVAILABLE" without warranties of any kind, either express or implied. Kotori Manga is not liable for data loss, network expenses incurred by cloud fetching, or interruption of third-party cloud services.</p>
+
+<h2>6. Termination</h2>
+<p>We reserve the right to modify, suspend, or discontinue the App or terminate your access to the service at any time without prior notice if you violate these Terms.</p>
+
+<h2>7. Contact Us</h2>
+<p>If you have any questions about these Terms, please contact us via email.</p>
+
 </div>
 
 </div>
 </div>
 </main>
 
-<footer class="border-t py-10" style="border-color:var(--color-sep)">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-<div class="flex items-center gap-2.5">
-<img src="/images/logo.png" alt="Kotori Manga" class="w-7 h-7 rounded-md object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-<div class="w-7 h-7 rounded-md items-center justify-center hidden" style="background:#005BFF">
-<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+<footer>
+<div class="footer-inner">
+<div class="footer-links">
+<a href="/">首页</a>
+<a href="/policy">隐私政策</a>
 </div>
-<span class="font-semibold text-sm">Kotori Manga</span>
-</div>
-<div class="flex items-center gap-6">
-<a href="/policy" class="footer-link">Privacy Policy</a>
-<a href="/terms" class="footer-link">Terms of Service</a>
-<a href="mailto:seigetsu.haneyo@gmail.com" class="footer-link mail-link">Contact</a>
-</div>
-<p class="text-xs" style="color:var(--color-text-secondary)">&copy; 2026 Kotori Manga. All rights reserved.</p>
-</div>
+<div class="footer-copy">&copy; 2026 Kotori Manga</div>
 </div>
 </footer>
 
 <script>
-function toggleTheme(){var h=document.documentElement;if(h.classList.contains('dark')){h.classList.remove('dark');h.classList.add('light');localStorage.setItem('theme','light')}else{h.classList.remove('light');h.classList.add('dark');localStorage.setItem('theme','dark')}}
-(function(){var s=localStorage.getItem('theme');if(s==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}else if(s==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}})();
+function toggleTheme(){
+var h=document.documentElement;
+if(h.classList.contains('dark')){
+h.classList.remove('dark');h.classList.add('light');localStorage.setItem('theme','light')
+}else{
+h.classList.remove('light');h.classList.add('dark');localStorage.setItem('theme','dark')
+}
+}
+(function(){
+var s=localStorage.getItem('theme');
+if(s==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}
+else if(s==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light')}
+else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}
+})();
 
 document.getElementById('langSelect').addEventListener('change',function(){
 var v=this.value;
@@ -154,18 +172,12 @@ document.getElementById('lastUpdated').textContent=v==='zh'?'最近更新：2026
 localStorage.setItem('termsLang',v);
 });
 (function(){
-var l=localStorage.getItem('termsLang')||'en';
+var l=localStorage.getItem('termsLang')||'zh';
 document.getElementById('langSelect').value=l;
 document.getElementById('content-en').style.display=l==='zh'?'none':'block';
 document.getElementById('content-zh').style.display=l==='zh'?'block':'none';
 document.getElementById('pageTitle').textContent=l==='zh'?'服务条款':'Terms of Service';
 document.getElementById('lastUpdated').textContent=l==='zh'?'最近更新：2026年6月':'Last Updated: June 2026';
-})();
-
-(function(){
-var els=document.querySelectorAll('.fade-in');
-var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible')}})},{threshold:0.1});
-els.forEach(function(el){observer.observe(el)});
 })();
 </script>
 </body>
