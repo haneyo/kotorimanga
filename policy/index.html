@@ -170,8 +170,8 @@ footer{padding:32px 22px;border-top:1px solid var(--sep)}
 <footer>
 <div class="footer-inner">
 <div class="footer-links">
-<a href="/">首页</a>
-<a href="/terms">服务条款</a>
+<a href="/" data-i18n-footer="footerHome">首页</a>
+<a href="/terms" data-i18n-footer="footerTerms">服务条款</a>
 </div>
 <div class="footer-copy">&copy; 2026 Kotori Manga</div>
 </div>
@@ -193,21 +193,26 @@ else if(s==='light'){document.documentElement.classList.remove('dark');document.
 else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}
 })();
 
-document.getElementById('langSelect').addEventListener('change',function(){
-var v=this.value;
+var policyI18n={zh:{footerHome:'首页',footerTerms:'服务条款'},en:{footerHome:'Home',footerTerms:'Terms of Service'}};
+function updatePolicyLang(v){
 document.getElementById('content-en').style.display=v==='zh'?'none':'block';
 document.getElementById('content-zh').style.display=v==='zh'?'block':'none';
 document.getElementById('pageTitle').textContent=v==='zh'?'隐私政策':'Privacy Policy';
 document.getElementById('lastUpdated').textContent=v==='zh'?'最近更新：2026年6月':'Last Updated: June 2026';
-localStorage.setItem('policyLang',v);
+var d=policyI18n[v]||policyI18n.en;
+document.querySelectorAll('[data-i18n-footer]').forEach(function(e){
+var k=e.getAttribute('data-i18n-footer');
+if(d[k])e.textContent=d[k]
+});
+}
+document.getElementById('langSelect').addEventListener('change',function(){
+updatePolicyLang(this.value);
+localStorage.setItem('policyLang',this.value);
 });
 (function(){
 var l=localStorage.getItem('policyLang')||'zh';
 document.getElementById('langSelect').value=l;
-document.getElementById('content-en').style.display=l==='zh'?'none':'block';
-document.getElementById('content-zh').style.display=l==='zh'?'block':'none';
-document.getElementById('pageTitle').textContent=l==='zh'?'隐私政策':'Privacy Policy';
-document.getElementById('lastUpdated').textContent=l==='zh'?'最近更新：2026年6月':'Last Updated: June 2026';
+updatePolicyLang(l);
 })();
 </script>
 </body>
