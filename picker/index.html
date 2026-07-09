@@ -1,269 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KotoriManga - Google Drive</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: white; overflow: hidden; font-family: -apple-system, sans-serif; }
-  #picker-container { width: 100vw; height: 100vh; position: relative; }
-  #login-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 24px; }
-  #login-container h2 { font-size: 22px; color: #333; margin-bottom: 12px; font-weight: 500; }
-  #login-container p { font-size: 14px; color: #666; margin-bottom: 32px; text-align: center; }
-  #login-btn { padding: 14px 36px; font-size: 16px; background: #4285f4; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
-  #login-btn:hover { background: #3367d6; }
-  #loading { font-size: 16px; color: #666; }
-  #error { color: #d93025; font-size: 14px; text-align: center; display: none; margin-top: 16px; }
+  body { background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .card { background: white; border-radius: 12px; padding: 32px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 360px; }
+  .card h2 { font-size: 20px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: #666; margin-bottom: 16px; }
+  .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #4285f4; border-radius: 50%; margin: 0 auto 16px; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
-<div id="picker-container">
-  <div id="login-container">
-    <h2 id="status-title">准备中...</h2>
-    <p id="status-desc">正在启动</p>
-    <div id="loading">⏳ 请稍候</div>
-    <div id="error"></div>
-    <button id="login-btn" style="display:none;" onclick="startOAuth()">使用 Google 账号登录</button>
+  <div class="card">
+    <div class="spinner"></div>
+    <h2>正在连接 Google Drive</h2>
+    <p>请稍候，正在将文件信息传回应用...</p>
   </div>
-</div>
 
-<script type="text/javascript">
-  var params = new URLSearchParams(window.location.search);
-  var API_KEY = params.get('key');
-  var SCHEME = params.get('scheme') || 'kotorimanga';
-  var REDIRECT_URI = 'https://kotorimanga.com/picker/';
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var scheme = params.get('scheme') || 'kotorimanga';
 
-  if (!API_KEY) {
-    showError('缺少 API Key 参数');
-  }
+    // Google redirects back with picked_file_ids and code
+    var pickedIDs = params.get('picked_file_ids');
 
-  var CLIENT_ID = '798405617409-91r7urrlnmtrsg9jojgaakfg4ck3fsap';
-  var ACCESS_TOKEN = null;
-  var _gapiReady = false;
-
-  // ===== 方式 1：URL 参数中有 token（App OAuth 获取后传入） =====
-  var urlToken = params.get('token');
-  if (urlToken) {
-    ACCESS_TOKEN = urlToken;
-  }
-
-  // ===== PKCE 工具函数 =====
-  function generateCodeVerifier() {
-    var array = new Uint8Array(64);
-    crypto.getRandomValues(array);
-    return base64url(array);
-  }
-
-  async function computeCodeChallenge(verifier) {
-    var encoder = new TextEncoder();
-    var data = encoder.encode(verifier);
-    var digest = await crypto.subtle.digest('SHA-256', data);
-    return base64url(new Uint8Array(digest));
-  }
-
-  function base64url(bytes) {
-    var binary = '';
-    for (var i = 0; i < bytes.length; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary)
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-  }
-
-  // ===== 方式 2：从 URL query 中提取 code（PKCE 回调） =====
-  if (!ACCESS_TOKEN) {
-    var urlCode = params.get('code');
-    if (urlCode) {
-      var cleanUrl = window.location.origin + window.location.pathname;
-      var hash = window.location.hash;
-      history.replaceState(null, null, cleanUrl + hash);
-
-      var storedVerifier = sessionStorage.getItem('pkce_code_verifier');
-      if (storedVerifier) {
-        sessionStorage.removeItem('pkce_code_verifier');
-        exchangeCodeForToken(urlCode, storedVerifier);
-      } else {
-        showError('登录状态丢失，请重新登录');
-      }
+    if (pickedIDs) {
+      // 解析文件 ID 列表并传回 App
+      var callbackURL = scheme + '://picker?ids=' + encodeURIComponent(pickedIDs);
+      window.location.href = callbackURL;
     } else {
-      // 检查 URL hash 中是否有 access_token
-      if (window.location.hash) {
-        var hashParams = new URLSearchParams(window.location.hash.substring(1));
-        var hashToken = hashParams.get('access_token');
-        if (hashToken) {
-          ACCESS_TOKEN = hashToken;
-          history.replaceState(null, null, window.location.pathname + window.location.search);
-        }
-      }
+      // 没有 picked_file_ids — 可能是直接访问或有问题
+      document.querySelector('.card h2').textContent = '连接失败';
+      document.querySelector('.card p').textContent = '未接收到文件信息，请返回应用重试。';
+      document.querySelector('.spinner').style.display = 'none';
     }
-  }
-
-  // 没有 token 也没有 code → 显示登录按钮
-  if (!ACCESS_TOKEN && !params.get('code')) {
-    showLoginScreen();
-  }
-
-  // ===== 加载 Google Picker API =====
-  function loadPickerAPI() {
-    if (ACCESS_TOKEN) {
-      showLoading('正在加载文件选择器...');
-      // 动态创建 script 标签加载 api.js
-      var script = document.createElement('script');
-      script.src = 'https://apis.google.com/js/api.js';
-      script.onload = function() {
-        _gapiReady = true;
-        gapi.load('picker', { callback: onPickerApiLoad });
-      };
-      script.onerror = function() {
-        showError('无法加载 Google API');
-      };
-      document.body.appendChild(script);
-    } else {
-      // 没有 token 且没有 code → 已显示登录按钮，不加载 Picker
-    }
-  }
-
-  // ===== 用 code 交换 token =====
-  function exchangeCodeForToken(code, verifier) {
-    showLoading('正在完成登录...');
-    // PKCE 流程：Web 应用类型需要 client_secret
-    var CLIENT_SECRET = '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';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://oauth2.googleapis.com/token');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        try {
-          var response = JSON.parse(xhr.responseText);
-          if (response.access_token) {
-            ACCESS_TOKEN = response.access_token;
-            loadPickerAPI();
-          } else {
-            showError('获取访问令牌失败：' + (response.error || '未知错误'));
-          }
-        } catch(e) {
-          showError('解析令牌响应失败');
-        }
-      } else {
-        showError('令牌交换失败 (HTTP ' + xhr.status + ')');
-      }
-    };
-
-    xhr.onerror = function() {
-      showError('网络请求失败，无法完成登录');
-    };
-
-    var body = new URLSearchParams({
-      code: code,
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      redirect_uri: REDIRECT_URI,
-      code_verifier: verifier,
-      grant_type: 'authorization_code'
-    });
-    xhr.send(body.toString());
-  }
-
-  function showLoginScreen() {
-    document.getElementById('status-title').textContent = '请登录 Google 账号';
-    document.getElementById('status-desc').textContent = '需要登录后才能浏览您的 Google 云端硬盘文件';
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('login-btn').style.display = 'inline-block';
-  }
-
-  function showLoading(text) {
-    document.getElementById('status-title').textContent = text || '加载中...';
-    document.getElementById('status-desc').textContent = '';
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('login-btn').style.display = 'none';
-    document.getElementById('error').style.display = 'none';
-  }
-
-  function showError(msg) {
-    document.getElementById('status-title').textContent = '出错了';
-    document.getElementById('status-desc').textContent = '';
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('login-btn').style.display = 'none';
-    var errEl = document.getElementById('error');
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
-  }
-
-  // ===== PKCE OAuth 登录 =====
-  async function startOAuth() {
-    showLoading('正在准备登录...');
-    document.getElementById('login-btn').style.display = 'none';
-
-    try {
-      var verifier = generateCodeVerifier();
-      var challenge = await computeCodeChallenge(verifier);
-      sessionStorage.setItem('pkce_code_verifier', verifier);
-
-      var oauthParams = new URLSearchParams({
-        client_id: CLIENT_ID,
-        response_type: 'code',
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        redirect_uri: REDIRECT_URI,
-        code_challenge: challenge,
-        code_challenge_method: 'S256',
-        access_type: 'offline',
-        state: 'picker'
-      });
-
-      window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + oauthParams.toString();
-    } catch(e) {
-      console.error('PKCE error:', e);
-      showError('启动登录失败：' + e.message);
-      setTimeout(showLoginScreen, 5000);
-    }
-  }
-
-  // ===== Google Picker =====
-  function onPickerApiLoad() {
-    if (!ACCESS_TOKEN) {
-      showError('缺少访问令牌');
-      return;
-    }
-
-    var view = new google.picker.View(google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS);
-    view.setMimeTypes('application/zip,application/x-cbz,application/x-cbr,application/x-rar,application/pdf,application/epub+zip,image/jpeg,image/png,image/gif,image/webp,application/vnd.google-apps.folder');
-
-    var picker = new google.picker.PickerBuilder()
-        .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-        .setTitle('选择漫画文件')
-        .setOAuthToken(ACCESS_TOKEN)
-        .setDeveloperKey(API_KEY)
-        .addView(view)
-        .addView(new google.picker.DocsUploadView())
-        .setCallback(pickerCallback)
-        .build();
-    picker.setVisible(true);
-  }
-
-  function pickerCallback(data) {
-    if (data.action == google.picker.Action.PICKED) {
-      var files = [];
-      for (var i = 0; i < data.docs.length; i++) {
-        var doc = data.docs[i];
-        files.push({
-          id: doc.id,
-          name: doc.name,
-          mimeType: doc.mimeType
-        });
-      }
-      var encoded = encodeURIComponent(JSON.stringify(files));
-      window.location.href = SCHEME + '://picker?files=' + encoded;
-    } else if (data.action == google.picker.Action.CANCEL) {
-      window.location.href = SCHEME + '://picker?cancel=1';
-    }
-  }
-
-  // ===== 启动：如果有 token，加载 Picker API =====
-  if (ACCESS_TOKEN) {
-    loadPickerAPI();
-  }
+  })();
 </script>
 </body>
 </html>
