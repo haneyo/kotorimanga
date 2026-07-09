@@ -37,7 +37,6 @@
   }
 
   var CLIENT_ID = '798405617409-91r7urrlnmtrsg9jojgaakfg4ck3fsap';
-  var CLIENT_SECRET = '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';
   var ACCESS_TOKEN = null;
   var _gapiReady = false;
 
@@ -157,7 +156,6 @@
     var body = new URLSearchParams({
       code: code,
       client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
       redirect_uri: REDIRECT_URI,
       code_verifier: verifier,
       grant_type: 'authorization_code'
@@ -231,7 +229,6 @@
 
     var picker = new google.picker.PickerBuilder()
         .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-        .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .setTitle('选择漫画文件')
         .setOAuthToken(ACCESS_TOKEN)
         .setDeveloperKey(API_KEY)
