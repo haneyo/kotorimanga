@@ -140,8 +140,8 @@ footer{padding:32px 22px;border-top:1px solid var(--sep)}
 <footer>
 <div class="footer-inner">
 <div class="footer-links">
-<a href="/">首页</a>
-<a href="/policy">隐私政策</a>
+<a href="/" data-i18n-footer="footerHome">首页</a>
+<a href="/policy" data-i18n-footer="footerPrivacy">隐私政策</a>
 </div>
 <div class="footer-copy">&copy; 2026 Kotori Manga</div>
 </div>
@@ -163,21 +163,26 @@ else if(s==='light'){document.documentElement.classList.remove('dark');document.
 else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark')}
 })();
 
-document.getElementById('langSelect').addEventListener('change',function(){
-var v=this.value;
+var termsI18n={zh:{footerHome:'首页',footerPrivacy:'隐私政策'},en:{footerHome:'Home',footerPrivacy:'Privacy Policy'}};
+function updateTermsLang(v){
 document.getElementById('content-en').style.display=v==='zh'?'none':'block';
 document.getElementById('content-zh').style.display=v==='zh'?'block':'none';
 document.getElementById('pageTitle').textContent=v==='zh'?'服务条款':'Terms of Service';
 document.getElementById('lastUpdated').textContent=v==='zh'?'最近更新：2026年6月':'Last Updated: June 2026';
-localStorage.setItem('termsLang',v);
+var d=termsI18n[v]||termsI18n.en;
+document.querySelectorAll('[data-i18n-footer]').forEach(function(e){
+var k=e.getAttribute('data-i18n-footer');
+if(d[k])e.textContent=d[k]
+});
+}
+document.getElementById('langSelect').addEventListener('change',function(){
+updateTermsLang(this.value);
+localStorage.setItem('termsLang',this.value);
 });
 (function(){
 var l=localStorage.getItem('termsLang')||'zh';
 document.getElementById('langSelect').value=l;
-document.getElementById('content-en').style.display=l==='zh'?'none':'block';
-document.getElementById('content-zh').style.display=l==='zh'?'block':'none';
-document.getElementById('pageTitle').textContent=l==='zh'?'服务条款':'Terms of Service';
-document.getElementById('lastUpdated').textContent=l==='zh'?'最近更新：2026年6月':'Last Updated: June 2026';
+updateTermsLang(l);
 })();
 </script>
 </body>
