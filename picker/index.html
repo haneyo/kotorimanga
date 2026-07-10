@@ -24,16 +24,17 @@
   (function() {
     var params = new URLSearchParams(window.location.search);
     var scheme = params.get('scheme') || 'kotorimanga';
-
-    // Google redirects back with picked_file_ids and code
     var pickedIDs = params.get('picked_file_ids');
+    var code = params.get('code');
 
     if (pickedIDs) {
-      // 解析文件 ID 列表并传回 App
+      // 将 code 和文件 ID 传回 App，由 App 端用 client_secret 交换 token
       var callbackURL = scheme + '://picker?ids=' + encodeURIComponent(pickedIDs);
+      if (code) {
+        callbackURL += '&code=' + encodeURIComponent(code);
+      }
       window.location.href = callbackURL;
     } else {
-      // 没有 picked_file_ids — 可能是直接访问或有问题
       document.querySelector('.card h2').textContent = '连接失败';
       document.querySelector('.card p').textContent = '未接收到文件信息，请返回应用重试。';
       document.querySelector('.spinner').style.display = 'none';
