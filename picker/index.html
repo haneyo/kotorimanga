@@ -7,17 +7,33 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
   .card { background: white; border-radius: 12px; padding: 32px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 360px; }
-  .card h2 { font-size: 20px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
-  .card p { font-size: 14px; color: #666; margin-bottom: 16px; }
-  .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #4285f4; border-radius: 50%; margin: 0 auto 16px; animation: spin 0.8s linear infinite; }
+
+  /* 成功：旋转的 Google Drive 三色三角 */
+  .drive-spinner { width: 48px; height: 48px; position: relative; margin: 0 auto 16px; animation: fadePulse 1.2s ease-in-out infinite; }
+  .drive-spinner::before { content: ''; position: absolute; width: 0; height: 0; border-left: 24px solid transparent; border-right: 24px solid transparent; border-bottom: 38px solid #f9be02; top: 5px; left: 0; animation: spin 1s linear infinite; }
+  .drive-spinner::after { content: ''; position: absolute; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 20px solid #4285f4; bottom: 5px; left: 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadePulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+  /* 失败：红色 X 图标 */
+  .error-icon { width: 48px; height: 48px; margin: 0 auto 16px; position: relative; display: none; }
+  .error-icon::before, .error-icon::after { content: ''; position: absolute; width: 4px; height: 40px; background: #e53935; border-radius: 2px; top: 4px; left: 22px; }
+  .error-icon::before { transform: rotate(45deg); }
+  .error-icon::after { transform: rotate(-45deg); }
+
+  /* 通用反馈（超时/重试提示） */
+  .hint-dots { display: none; gap: 6px; justify-content: center; margin-top: 12px; }
+  .hint-dots span { width: 8px; height: 8px; border-radius: 50%; background: #ccc; animation: dotBounce 1.4s ease-in-out infinite; }
+  .hint-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .hint-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 </style>
 </head>
 <body>
   <div class="card">
-    <div class="spinner"></div>
-    <h2>正在完成 Google Drive 操作</h2>
-    <p>正在将文件信息传回应用...</p>
+    <div class="drive-spinner"></div>
+    <div class="error-icon"></div>
+    <div class="hint-dots"><span></span><span></span><span></span></div>
   </div>
 
 <script>
@@ -28,14 +44,31 @@
     var code = params.get('code');
 
     if (pickedIDs) {
-      // Google Picker 选完文件后的回调 → 传回 App
+      // 选完文件 → 传回 App（一闪而过，用户看不到页面）
       var url = scheme + '://picker?ids=' + encodeURIComponent(pickedIDs);
       if (code) url += '&code=' + encodeURIComponent(code);
       window.location.href = url;
     } else {
-      document.querySelector('.card h2').textContent = '未选择文件';
-      document.querySelector('.card p').textContent = '请返回应用重试。';
-      document.querySelector('.spinner').style.display = 'none';
+      // 出错：隐藏 spinner，显示错误图标 + 重试提示
+
+      // 检测系统语言
+      var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      var isCN = lang === 'zh-cn' || lang === 'zh' || lang === 'zh-hans' || lang === 'zh-hk' || lang === 'zh-tw';
+
+      document.querySelector('.drive-spinner').style.display = 'none';
+      document.querySelector('.error-icon').style.display = 'block';
+      document.querySelector('.hint-dots').style.display = 'flex';
+
+      // 5 秒后引导用户返回 App
+      setTimeout(function() {
+        var hint = document.querySelector('.hint-dots');
+        hint.style.display = 'none';
+        var backLink = document.createElement('a');
+        backLink.href = scheme + '://picker?cancel=1';
+        backLink.textContent = isCN ? '返回应用' : 'Back to App';
+        backLink.style.cssText = 'display:inline-block;margin-top:16px;padding:10px 24px;background:#4285f4;color:white;border-radius:8px;text-decoration:none;font-size:14px;font-weight:500;';
+        document.querySelector('.card').appendChild(backLink);
+      }, 5000);
     }
   })();
 </script>
